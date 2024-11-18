@@ -3,74 +3,74 @@
 ##### GENERAL
 ########################################
 variable "aws_region" {
-  type = string
+  type        = string
   description = "AWS region to deploy the infrastructure"
-  default = "us-east-1"
+  default     = "us-east-1"
 }
 
 variable "domain" {
-  type = string
+  type        = string
   description = "The domain of your project"
 }
 
 variable "logs_retention" {
-  type = number
+  type        = number
   description = "CloudWatch Group log retention"
-  default = 90
+  default     = 90
 }
 
 ########################################
 ##### NETWORKING
 ########################################
 variable "vpc_deploy" {
-  type = bool
+  type        = bool
   description = "Controls the deployment of the VPC resources (VPC, Subnets, Internet Gateway, Route Table...). If you already have a VPC deployed, set this variable to false and set 'vpc_id' variable."
-  default = true
+  default     = true
 }
 
 variable "vpc_id" {
-  type = string
+  type        = string
   description = "VPC ID of the already deployed VPC in your account. To use this, set vpc_deploy to false."
-  default = ""
+  default     = ""
 }
 
 variable "vpc_name" {
-  type = string
+  type        = string
   description = "Name of the VPC to deploy"
-  default = "PoC"
+  default     = "PoC"
 }
 
 variable "vpc_cidr" {
-  type = string
+  type        = string
   description = "CIDR of the VPC to create. Please use a /16 mask for high compatibility with this module."
-  default = "10.50.0.0/16"
+  default     = "10.50.0.0/16"
 }
 
 ########################################
 ##### BACKEND
 ########################################
 variable "backend_subdomain" {
-  type = string
+  type        = string
   description = "Subdomain where the API Gateway will be exposed, i.e. https://{backend_subdomain}/{domain}"
-  default = "api"
+  default     = "api"
 }
 
 variable "lambda_name" {
-  type = string
+  type        = string
   description = "Name of the Lambda Function"
-  default = "backend-api"
+  default     = "backend-api"
 }
 
 variable "lambda_memory" {
-  type = number
+  type        = number
   description = "Amount of memory that should be used in the Lambda"
-  default = 256
+  default     = 256
 }
 
 variable "lambda_architecture" {
-  type = string
+  type        = string
   description = "Architecture that the Lambda function will run"
-  default = "arm64"
+  default     = "arm64"
 
   validation {
     condition     = contains(["x86_64", "arm64"], var.lambda_architecture)
@@ -79,22 +79,22 @@ variable "lambda_architecture" {
 }
 
 variable "lambda_timeout" {
-  type = number
+  type        = number
   description = "Timeout in seconds of the Lambda"
-  default = 5
+  default     = 5
 }
 
 ########################################
 ##### DATABASE
 ########################################
 variable "table_name" {
-  type = string
+  type        = string
   description = "Name of the DynamoDB table"
-  default = "table"
+  default     = "table"
 }
 
 variable "table_attributes" {
-  type = list(map(string))
+  type        = list(map(string))
   description = "Attributes of the DynamoDB table"
   default = [
     {
@@ -105,7 +105,21 @@ variable "table_attributes" {
 }
 
 variable "table_hash_key" {
-  type = string
+  type        = string
   description = "Hash key of the DynamodDB table"
-  default = "UserId"
+  default     = "UserId"
+}
+
+########################################
+##### FRONTEND
+########################################
+variable "frontend_subdomain" {
+  type        = string
+  description = "Subdomain that the Website will be exposed, i.e. https://{frontend_subdomain}/{domain}"
+  default     = "app"
+}
+
+variable "frontend_bucket_name" {
+  type        = string
+  description = "Name of the S3 bucket that will contains the frontend website"
 }

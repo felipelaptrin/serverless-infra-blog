@@ -9,9 +9,9 @@ terraform {
   }
 
   backend "s3" {
-    bucket = "terraform-states-937168356724-serverless-infra"
-    key    = "state.tfstate"
-    region = "us-east-1"
+    bucket         = "terraform-states-937168356724-serverless-infra"
+    key            = "state.tfstate"
+    region         = "us-east-1"
     dynamodb_table = "terraform-lock-937168356724-serverless-infra"
   }
 }
