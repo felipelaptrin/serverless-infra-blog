@@ -1,0 +1,14 @@
+name: backend-api
+output_binary: /usr/local/bin/aws-lambda-rie /var/task/main
+build_command: go build -o /var/task/main
+build_dir: "/src"
+run_command: '{{.output_binary}}'
+runtime_image: golang:1.23
+debugger_enabled: false
+debugger_port: 0
+expose_ports:
+- 8080:8080
+networks: []
+environment: [AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN]
+pre_run_commands:
+- curl -sLo /tmp/aws-lambda-rie https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/latest/download/aws-lambda-rie && mv /tmp/aws-lambda-rie /usr/local/bin/aws-lambda-rie && chmod +x /usr/local/bin/aws-lambda-rie
