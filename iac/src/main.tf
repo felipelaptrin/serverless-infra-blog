@@ -16,6 +16,19 @@ module "vpc" {
 }
 
 ########################################
+##### DATABASE
+########################################
+module "dynamodb-table" {
+  source  = "terraform-aws-modules/dynamodb-table/aws"
+  version = "4.2.0"
+
+  name = var.table_name
+  attributes = var.table_attributes
+  hash_key = var.table_hash_key
+  billing_mode = "PAY_PER_REQUEST"
+}
+
+########################################
 ##### BACKEND
 ########################################
 module "ecr" {
@@ -27,6 +40,7 @@ module "ecr" {
   repository_image_scan_on_push	= false
   create_lifecycle_policy	= false
 }
+
 
 module "lambda_function" {
   source = "terraform-aws-modules/lambda/aws"
@@ -53,6 +67,25 @@ module "lambda_function" {
       source_arn = "arn:aws:execute-api:${var.aws_region}:${data.aws_caller_identity.current.account_id}:${module.api_gateway.api_id}/*/*"
     }
   }
+
+  attach_policy_json = true
+  policy_json = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "dynamodb:Batch*",
+          "dynamodb:GetItem",
+          "dynamodb:PutItem",
+          "dynamodb:UpdateItem",
+          "dynamodb:Query",
+          "dynamodb:Scan",
+        ]
+        Effect   = "Allow"
+        Resource = "${module.dynamodb-table.dynamodb_table_arn	}"
+      },
+    ]
+  })
 }
 
 module "api_gateway" {
