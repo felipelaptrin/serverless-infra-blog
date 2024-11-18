@@ -3,6 +3,7 @@
   "packages": [
     "awscli2@2.19.0",
     "terraform@1.9.8",
-    "git@2.47.0"
+    "git@2.47.0",
+    "go@1.23.2"
   ]
 }
