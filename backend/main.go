@@ -53,6 +53,16 @@ func init() {
 }
 
 func handler(request events.APIGatewayV2HTTPRequest) (events.APIGatewayProxyResponse, error) {
+	if request.RequestContext.HTTP.Method == "OPTIONS" {
+		return events.APIGatewayProxyResponse{
+			Headers: map[string]string{
+				"Access-Control-Allow-Headers": "Content-Type",
+				"Access-Control-Allow-Origin":  os.Getenv("FRONTEND_ENDPOINT"),
+				"Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+			},
+			StatusCode: 200,
+		}, nil
+	}
 	if request.RequestContext.HTTP.Method == "POST" {
 		return createUser(request)
 	}
